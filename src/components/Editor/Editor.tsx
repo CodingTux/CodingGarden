@@ -4,9 +4,17 @@ import MonacoEditor, {useMonaco} from '@monaco-editor/react'
 import styled from "styled-components"
 import { useDropzone } from 'react-dropzone'
 
+interface Metadata{
+    language: string,
+    value: any,
+    filename: string
+  }
+
 interface EditorProps {
-    files?: any,
-    setFiles?: Function
+    files: any,
+    setFiles: Function,
+    metadata: Metadata,
+    setMetadata: Function
 }
 
 interface Files {
@@ -15,7 +23,7 @@ interface Files {
     content: string
 }
 
-function Editor({ files, setFiles }: EditorProps) {
+function Editor({ files, setFiles, metadata , setMetadata}: EditorProps) {
 
     const monaco = useMonaco()
 
@@ -37,16 +45,11 @@ function Editor({ files, setFiles }: EditorProps) {
         }
       }, [monaco]);
 
-    const [metadata, setMetadata] = useState({
-        language: "",
-        value: "",
-        filename: "package.json"
-    })
     const onDrop = useCallback(acceptedFiles => {
         // Do something with the files
         if(acceptedFiles.length > 0){
             if (typeof (setFiles) === "function") {
-                setFiles(acceptedFiles, setMetadata)
+                setFiles(acceptedFiles)
             }
         }
     }, [])
@@ -81,7 +84,7 @@ function Editor({ files, setFiles }: EditorProps) {
                     })
                 }
                 `
-            }], setMetadata, true)
+            }], true)
         }
     }
 

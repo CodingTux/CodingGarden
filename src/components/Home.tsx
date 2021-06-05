@@ -19,7 +19,14 @@ interface HomeProps  {
 }
 
 interface HomeState {
-  files: Array<any>
+  files: Array<any>,
+  metadata: Metadata
+}
+
+interface Metadata{
+  language: string,
+  value: any,
+  filename: string
 }
 
 class Home
@@ -36,13 +43,40 @@ class Home
     }
 
     this.state = {
-      files: []
+      files: [],
+      metadata: {
+        language: "",
+        value: "",
+        filename: "package.json"
+      }
     }
 
     this.setFiles = this.setFiles.bind(this)
+    this.setMetadata = this.setMetadata.bind(this)
   }
 
-  async setFiles(file: Array<any>, setMetadata: any, isNew = false) {
+  setMetadata({language, value, filename}: Metadata){
+    this.setState({
+      metadata: {
+        language,
+        value,
+        filename
+      }
+    })
+  }
+
+  setFiles(file: Array<any>, isNew: Boolean = false, forDelete: Boolean = false) {
+    if(forDelete){
+      this.setState({
+        files: file
+      })
+      this.setMetadata({
+        language: "javascript",
+        value: "// Drag to open file",
+        filename: ""
+      })
+      return
+    }
     if(isNew){
       this.setState({
         files: [...this.state.files, {
@@ -51,7 +85,7 @@ class Home
           content: file[0].content
         }]
       })
-      setMetadata({
+      this.setMetadata({
         language: map[file[0].filename.split(".").pop()][0],
         value: file[0].content,
         filename: file[0].filename
@@ -71,7 +105,7 @@ class Home
           content: event.target.result
         }]
       })
-      setMetadata({
+      this.setMetadata({
         language: map[file[file.length - 1].name.split(".").pop()][0],
         value: event.target.result,
         filename: file[file.length - 1].name
@@ -107,7 +141,7 @@ class Home
         <ReflexContainer orientation="vertical">
           <ReflexElement className="left-pane" flex={0.2}>
             <div className="pane-content">
-              <Sidebar files={this.state.files} setFiles={this.setFiles}/>
+              <Sidebar files={this.state.files} setFiles={this.setFiles} setMetadata={this.setMetadata} selectedFile={this.state.metadata.filename}/>
             </div>
           </ReflexElement>
           <ReflexSplitter />
@@ -122,7 +156,7 @@ class Home
                 flex={0.8}>
 
                 <div className="pane-content">
-                  <Editor files={this.state.files} setFiles={this.setFiles}/>
+                  <Editor files={this.state.files} setFiles={this.setFiles} metadata={this.state.metadata} setMetadata={this.setMetadata}/>
                 </div>
 
               </ReflexElement>
@@ -141,7 +175,7 @@ class Home
 
           <ReflexSplitter />
 
-          <ReflexElement className="right-pane" flex={0.2}>
+          <ReflexElement className="right-pane" flex={0.03}>
             <div className="pane-content">
               <Browser />
             </div>
@@ -179,5 +213,6 @@ const HomeContainer = styled.div`
         /* background-color: ${props => props.theme.dark3}; */
         background-color: ${props => props.theme.dark3};
     }
+
 
 `

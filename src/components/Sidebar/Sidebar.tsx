@@ -4,7 +4,9 @@ import {LogoCG, Avatar, Remove} from "../../assets"
 
 interface SidebarProps {
     files?: any,
-    setFiles?: Function
+    setFiles?: Function,
+    selectedFile?: string
+    setMetadata?: Function
 }
 
 interface Files {
@@ -13,7 +15,20 @@ interface Files {
     content: string
 }
 
-function Sidebar({files, setFiles}: SidebarProps) {
+function Sidebar({files, setFiles, setMetadata, selectedFile}: SidebarProps) {
+ 
+    const removeFile = (i) => {
+        let allFiles = files
+        allFiles.splice(i, 1);
+        setFiles(allFiles, false, true)
+    }
+
+    const setMetadataObj = (fi) => {
+        setMetadata({
+            language: fi.language, value: fi.content, filename: fi.filename
+        })
+    }
+
     return (
         <SidebarContainer>
             <div className="f1">
@@ -24,9 +39,12 @@ function Sidebar({files, setFiles}: SidebarProps) {
                 <h3>Files</h3>
                 <div className="explorer">
                     {
-                        files.map((fi: Files, i: any) => (
-                            <div className="fi-item"><span>{fi.filename}</span> <Remove  width={30} height="auto"/></div>
-                        ))
+                        files.map((fi: Files, i: any) => {
+                            console.log(fi)
+                            console.log(selectedFile)
+                            return(
+                            <div className={`fi-item ${fi.filename === selectedFile && "selected-sidebar"}`} onClick={() => setMetadataObj(fi)}><span>{fi.filename}</span> <Remove onClick={() => removeFile(i)} width={30} height="auto"/></div>
+                        )})
                     }
                 </div>
             </div>
@@ -57,21 +75,31 @@ const SidebarContainer = styled.div`
         height: 100vh;
         .explorer{
             margin-top: 2rem;
-            .fi-item{
+   
+            .fi-item, .selected-sidebar{
                 background-color: ${props => props.theme.darkslate};
                 padding: 1rem;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                border-style: solid;
+                border-width: 5px;
+                border-color: ${props => props.theme.darkslate};
                 span{
                     cursor: pointer;
                 }
+
                 &:hover {
                     border-style: solid;
                     border-width: 5px;
                     border-color: ${props => props.theme.darkslate};
                     background-color: ${props => props.theme.dark1};
                 }
+            }
+
+            .selected-sidebar {
+                border-color: #25b386;
+                border-width: 5px;
             }
 
         }
