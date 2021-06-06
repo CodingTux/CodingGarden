@@ -13,7 +13,7 @@ router.get('/:userId', async (req, res) => {
     console.log(isRegistered)
     res.json({"Message": "Welcome " + req.params.userId});
   }catch(err){
-      res.err({
+      res.json({
           "Message": "INTERNAL_SERVER_ERROR"
       })
   }

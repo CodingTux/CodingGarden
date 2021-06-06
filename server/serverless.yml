@@ -1,0 +1,23 @@
+service: backend
+plugins:
+        - serverless-dotenv-plugin
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: ap-south-1
+  memorySize: 128
+functions:
+  app:
+    handler: src/index.handler
+    timeout: 45
+    events: 
+      - http: 
+          path: /
+          method: ANY
+          cors: true
+      - http: 
+          path: /{proxy+}
+          method: ANY
+          cors: true
+

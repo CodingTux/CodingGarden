@@ -11,7 +11,7 @@ router.get('/:userId', async (req, res) => {
     const files = await User.fetchFiles(req.params.userId)
     res.json({"Files": files});
   }catch(err){
-    res,err({
+    res.json({
       "Error": "INTERNAL_SERVER_ERROR"
     })
   }
