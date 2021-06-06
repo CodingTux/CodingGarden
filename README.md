@@ -24,6 +24,7 @@
   <li>Security. As of now there is technically no security.</li>
   <li>Better saving of files. As of now file content is saved in database along with its metadata. What we can do is we can store file in S3 and store its object id in database.</li>
   <li>Integration with real terminal.</li>
+  <li>UI can be improved like show proper loadings and all.</li>
   </ul>
 </div>
 
