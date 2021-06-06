@@ -1,19 +1,19 @@
-# Start Server
+# Start Frontend
 
 ## Setup
 
 ```
-npm install
+yarn install
 ```
 
 ## Development
 
 ```
-npm run dev
+yarn start
 ```
 
 ## Production
 
 ```
-npm start
+yarn build
 ```
