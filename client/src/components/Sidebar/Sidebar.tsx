@@ -17,13 +17,12 @@ interface Files {
     content: string
 }
 
-function Sidebar({files, setFiles, setMetadata, selectedId, onSave}: SidebarProps) {
+function Sidebar({files, setFiles, setMetadata, selectedId}: SidebarProps) {
 
     const removeFile = (i) => {
         let allFiles = files
         allFiles.splice(i, 1);
         setFiles(allFiles, false, true)
-        onSave(() => console.log("saving again"))
     }
 
     const setMetadataObj = (fi) => {
@@ -47,7 +46,7 @@ function Sidebar({files, setFiles, setMetadata, selectedId, onSave}: SidebarProp
                         files.map((fi: Files, i: any) => {
                             console.log(fi)
                             return(
-                            <div className={`fi-item ${fi.id === selectedId && "selected-sidebar"}`} onClick={() => setMetadataObj(fi)}><span>{fi.filename}</span> <Remove onClick={() => removeFile(i)} width={30} height="auto"/></div>
+                            <div key={i} className={`fi-item ${fi.id === selectedId && "selected-sidebar"}`} onClick={() => setMetadataObj(fi)}><span>{fi.filename}</span> <Remove onClick={() => removeFile(i)} width={30} height="auto"/></div>
                         )})
                     }
                 </div>

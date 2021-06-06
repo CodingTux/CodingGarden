@@ -19,7 +19,8 @@ interface HomeState {
   files: Array<any>,
   metadata: Metadata,
   userID: any,
-  isSetted: boolean
+  isSetted: boolean,
+  loading: boolean
 }
 
 interface Metadata{
@@ -46,7 +47,8 @@ class Home
         filename: "package.json"
       },
       userID: "",
-      isSetted: false
+      isSetted: false,
+      loading: false
     }
 
     this.setFiles = this.setFiles.bind(this)
@@ -59,6 +61,7 @@ class Home
   }
 
   async fetchFiles() {
+    this.setState({loading: true})
     if(localStorage.getItem("userId")){
 
       try{
@@ -70,7 +73,8 @@ class Home
         this.setState({
           userID: localStorage.getItem("userId"),
           isSetted: true,
-          files: userFiles.Files as any
+          files: userFiles.Files as any,
+          loading: false
         })
       }catch(err){
         console.log(err)
@@ -96,7 +100,7 @@ class Home
     if(forDelete){
       this.setState({
         files: file
-      })
+      }, () => this.onSave(() => console.log("state updated"), false, false))
       this.setMetadata({
         id: "",
         language: "javascript",
@@ -114,13 +118,14 @@ class Home
           language:  map[file[0].filename.split(".").pop()][0],
           content: file[0].content
         }]
-      })
+      },() => this.onSave(() => console.log("state updated"), false, false))
       this.setMetadata({
         id: id,
         language: map[file[0].filename.split(".").pop()][0],
         value: file[0].content,
         filename: file[0].filename
       })
+
 
       return
     }
@@ -137,7 +142,7 @@ class Home
             language: map[file[file.length - 1].name.split(".").pop()][0],
             content: event.target.result
           }]
-        })
+        }, () => this.onSave(() => console.log("state updated"), false, false))
         this.setMetadata({
           id,
           language: map[file[file.length - 1].name.split(".").pop()][0],
@@ -160,23 +165,27 @@ class Home
     this.fetchFiles()
   }
 
-  async onSave(setSaving, fromDelete: false) {
+  async onSave(setSaving, fromDelete: false, showAlert=true) {
       setSaving(true)
       try{
           const isSaved = await UploadFiles(this.state.userID, this.state.files)
           console.log(isSaved)
-          if(fromDelete){
-            alert("File deleted successfully...")
-          }else{
-            alert("Files saved successfully...")
+          if(showAlert){
+            if(fromDelete){
+              alert("File deleted successfully...")
+            }else{
+              alert("Files saved successfully...")
+            }
           }
           setSaving(false)
       }catch(err){
         console.log(err)
-        if(fromDelete){
-          alert("Error while deleting...")
-        }else{
-          alert("Error while saving...")
+        if(showAlert){
+          if(fromDelete){
+            alert("Error while deleting...")
+          }else{
+            alert("Error while saving...")
+          }
         }
         setSaving(false)
       }
@@ -195,13 +204,13 @@ class Home
                 <button disabled={this.state.userID.trim() === ""} onClick={() => {
                   this.setState({isSetted: true})
                   this.registerOrLogin()
-                }}>Enter</button>
+                }}> {this.state.loading ? "Fetching..." : "Enter"}</button>
             </UserInfoContainer>
         </Popup>
         <ReflexContainer orientation="vertical">
           <ReflexElement className="left-pane" flex={0.2}>
             <div className="pane-content">
-              <Sidebar onSave={this.onSave} files={this.state.files} setFiles={this.setFiles} setMetadata={this.setMetadata} selectedId={this.state.metadata.id}/>
+              <Sidebar files={this.state.files} setFiles={this.setFiles} setMetadata={this.setMetadata} selectedId={this.state.metadata.id}/>
             </div>
           </ReflexElement>
           <ReflexSplitter className="splitter"/>
