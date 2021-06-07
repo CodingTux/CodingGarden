@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from "styled-components"
-import {LogoCG, LogoutBtn, Remove} from "../../assets"
+import { LogoCG, LogoutBtn, Remove } from "../../assets"
 
 interface SidebarProps {
     files?: any,
     setFiles?: Function,
     selectedId?: string
     setMetadata?: Function,
-    onSave?: Function
+    onSave?: Function,
+    filesLoading?: Boolean
 }
 
 interface Files {
@@ -17,7 +18,7 @@ interface Files {
     content: string
 }
 
-function Sidebar({files, setFiles, setMetadata, selectedId}: SidebarProps) {
+function Sidebar({ files, setFiles, setMetadata, selectedId, filesLoading }: SidebarProps) {
 
     const removeFile = (i) => {
         let allFiles = files
@@ -34,22 +35,28 @@ function Sidebar({files, setFiles, setMetadata, selectedId}: SidebarProps) {
     return (
         <SidebarContainer>
             <div className="f1">
-                <LogoCG width={70} height="auto"/>
-                <LogoutBtn onClick = {() => {localStorage.removeItem("userId")
-                window.location.reload()
-            }} className="avtr-img" width={70} height="auto"/>
+                <LogoCG width={70} height="auto" />
+                <LogoutBtn onClick={() => {
+                    localStorage.removeItem("userId")
+                    window.location.reload()
+                }} className="avtr-img" width={70} height="auto" />
             </div>
             <div className="f2">
                 <h3>Files</h3>
-                <div className="explorer">
-                    {
-                        files.map((fi: Files, i: any) => {
-                            console.log(fi)
-                            return(
-                            <div key={i} className={`fi-item ${fi.id === selectedId && "selected-sidebar"}`} onClick={() => setMetadataObj(fi)}><span>{fi.filename}</span> <Remove onClick={() => removeFile(i)} width={30} height="auto"/></div>
-                        )})
-                    }
-                </div>
+                {
+                    filesLoading ? <div className={`fi-item`} ><span>Checking for saved files...</span></div> :
+
+                        <div className="explorer">
+                            {
+                                files.map((fi: Files, i: any) => {
+                                    console.log(fi)
+                                    return (
+                                        <div key={i} className={`fi-item ${fi.id === selectedId && "selected-sidebar"}`} onClick={() => setMetadataObj(fi)}><span>{fi.filename}</span> <Remove onClick={() => removeFile(i)} width={30} height="auto" /></div>
+                                    )
+                                })
+                            }
+                        </div>
+                }
             </div>
         </SidebarContainer>
     )

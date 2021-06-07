@@ -32,9 +32,11 @@ function Terminal({userID, isSetted}: TerminalProps) {
       );
       // @ts-ignore: Object is possibly 'null'.
       xtermRef.current.terminal.write(`(base) ${userID}@codinggarden:~$`);
-      
     }
-  }, [isSetted])
+    return () => {
+      console.log("Terminal component removed")
+    }
+  }, [isSetted, userID])
   return (
     <div>
       <Xterm

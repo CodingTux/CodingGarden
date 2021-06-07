@@ -66,7 +66,7 @@ function Editor({ files, setFiles, metadata, setMetadata, onSave }: EditorProps)
                 ))
             }
         }
-    }, [])
+    }, [setFiles])
     const customInputRef = useRef(null)
     const { getRootProps } = useDropzone({ onDrop })
 
@@ -95,7 +95,7 @@ function Editor({ files, setFiles, metadata, setMetadata, onSave }: EditorProps)
         console.log(e.target.files)
         const files = [...e.target.files]
         if (typeof (setFiles) === "function") {
-            files.map((file: File) => {
+            files.forEach((file: File) => {
                 setFiles([file])
             })
         }
