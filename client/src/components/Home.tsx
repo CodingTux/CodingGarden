@@ -54,6 +54,7 @@ class Home
     this.setFiles = this.setFiles.bind(this)
     this.setMetadata = this.setMetadata.bind(this)
     this.onSave = this.onSave.bind(this)
+    this.updateFileContent = this.updateFileContent.bind(this)
   }
 
   componentDidMount(){
@@ -88,6 +89,15 @@ class Home
         value,
         filename
       }
+    })
+  }
+
+  updateFileContent(id: String, value: String) {
+    let doc_index = this.state.files.findIndex(a => a.id === id)
+    let files = this.state.files
+    files[doc_index] = {...files[doc_index], content: value}
+    this.setState({
+      files
     })
   }
 
@@ -223,7 +233,7 @@ class Home
                 flex={0.8}>
 
                 <div className="pane-content">
-                  <Editor files={this.state.files} setFiles={this.setFiles} metadata={this.state.metadata} setMetadata={this.setMetadata} onSave={this.onSave}/>
+                  <Editor updateFileContent={this.updateFileContent} files={this.state.files} setFiles={this.setFiles} metadata={this.state.metadata} setMetadata={this.setMetadata} onSave={this.onSave}/>
                 </div>
 
               </ReflexElement>

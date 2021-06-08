@@ -18,7 +18,8 @@ interface EditorProps {
     setFiles: Function,
     metadata: Metadata,
     setMetadata: Function,
-    onSave: Function
+    onSave: Function,
+    updateFileContent: Function
 }
 
 interface Files {
@@ -28,7 +29,7 @@ interface Files {
     content: string
 }
 
-function Editor({ files, setFiles, metadata, setMetadata, onSave }: EditorProps) {
+function Editor({ files, setFiles, metadata, setMetadata, onSave, updateFileContent }: EditorProps) {
 
     const monaco = useMonaco()
     const [customFile, setCustomFile] = useState({
@@ -135,6 +136,7 @@ function Editor({ files, setFiles, metadata, setMetadata, onSave }: EditorProps)
                     options={
                         { fontSize: 20, }
                     }
+                    onChange = {(e) => updateFileContent(metadata.id, e)}
                     defaultLanguage="python"
                     defaultValue="# Drop file from you system here. Or click upload file / + above"
                 />
