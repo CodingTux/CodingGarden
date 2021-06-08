@@ -10,10 +10,21 @@
 
 <div class="dark-bg">
   <ul>
-  <li>Code editor on frontend
+    <li>Code editor on frontend</li>
   <li>Terminal on frontend.</li>
   <li>Multiple Resizable windows</li>
   <li>Code files are saved and restored</li>
+  </ul>
+</div>
+
+---
+## Hosting Platforms
+
+<div class="dark-bg">
+  <ul>
+    <li>Frontend React App is depoyed in vercel </li>
+    <li>Backend writtern in Nodejs hosted in AWS Lambda</li>
+    <li>Database used is MongoDB. Using MongoDB Atlas</li>
   </ul>
 </div>
 
